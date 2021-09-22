@@ -1,12 +1,17 @@
 import React from 'react';
 import TransactionList from './IncomeList';
 import './App.scss';
-
 class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <TransactionList total={0} curTitle="" curAmount="" items={[]}></TransactionList>
+                <TransactionList
+                    frequency={null}
+                    total={0}
+                    curTitle=""
+                    curAmount=""
+                    items={[]}
+                ></TransactionList>
             </div>
         );
     }
