@@ -67,7 +67,6 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
         });
         return (
             <div className="add-income">
-                <div>Freq {this.state.curFrequency}</div>
                 <form onSubmit={this.addItem}>
                     <label htmlFor="">
                         Title
@@ -110,5 +109,32 @@ class Transaction {
         this.amount = amount;
         this.frequency = frequency;
     }
+
+    toDays(freq: Frequency): number | undefined {
+        switch (freq) {
+            case 'day':
+                return 1;
+            case 'week':
+                return 7;
+            case 'month':
+                return 30;
+            case 'year':
+                return 365;
+            case 'one time':
+                return undefined;
+            default:
+                return undefined;
+        }
+    }
+
+    toFreq(newFreq: Frequency): number | undefined {
+        let freqToDay = this.toDays(newFreq);
+
+        if (freqToDay) return this.amount / freqToDay;
+        else return undefined;
+    }
+
+    // 5/wk -> ?/day
+    // 5/wk * wk/7day
 }
 export default TransactionList;
