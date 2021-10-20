@@ -7,7 +7,7 @@ interface ITransactionList {
     curTitle: string;
     items: Transaction[];
     total: number;
-    frequency: Frequency;
+    curFrequency: Frequency;
 }
 class TransactionList extends React.Component<ITransactionList, ITransactionList> {
     constructor(props: any) {
@@ -18,7 +18,7 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
             curTitle: '',
             curAmount: '',
             total: 0,
-            frequency: null,
+            curFrequency: null,
         };
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -28,7 +28,7 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
     }
 
     onFreqChange(freq: Frequency) {
-        this.setState({ frequency: freq });
+        this.setState({ curFrequency: freq });
     }
 
     handleTitleChange(e: any) {
@@ -43,7 +43,7 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
         e.preventDefault();
         let curAmount = Number(this.state.curAmount);
         let curTitle = this.state.curTitle;
-        let curFrequency = this.state.frequency;
+        let curFrequency = this.state.curFrequency;
         let curTotal = this.state.total;
 
         if (isNaN(curAmount) || curAmount === 0 || curTitle.length === 0) return;
@@ -67,7 +67,7 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
         });
         return (
             <div className="add-income">
-                <div>Freq {this.state.frequency}</div>
+                <div>Freq {this.state.curFrequency}</div>
                 <form onSubmit={this.addItem}>
                     <label htmlFor="">
                         Title

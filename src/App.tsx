@@ -6,7 +6,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <TransactionList
-                    frequency={null}
+                    curFrequency={null}
                     total={0}
                     curTitle=""
                     curAmount=""
