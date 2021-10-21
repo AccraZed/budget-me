@@ -7,7 +7,8 @@ interface ITransactionList {
     curTitle: string;
     items: Transaction[];
     total: number;
-    curFrequency: Frequency;
+    curFreq: Frequency;
+    targetFreq: Frequency;
 }
 class TransactionList extends React.Component<ITransactionList, ITransactionList> {
     constructor(props: any) {
@@ -18,7 +19,8 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
             curTitle: '',
             curAmount: '',
             total: 0,
-            curFrequency: null,
+            curFreq: null,
+            targetFreq: 'month',
         };
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -28,7 +30,7 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
     }
 
     onFreqChange(freq: Frequency) {
-        this.setState({ curFrequency: freq });
+        this.setState({ curFreq: freq });
     }
 
     handleTitleChange(e: any) {
@@ -41,10 +43,12 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
 
     addItem(e: any) {
         e.preventDefault();
-        let curAmount = Number(this.state.curAmount);
-        let curTitle = this.state.curTitle;
-        let curFrequency = this.state.curFrequency;
-        let curTotal = this.state.total;
+        const curAmount = Number(this.state.curAmount);
+        const curTitle = this.state.curTitle;
+        const curFrequency = this.state.curFreq;
+        const curTotal = this.state.total;
+
+        const newTransaction = new Transaction(curTitle, curAmount, curFrequency);
 
         if (isNaN(curAmount) || curAmount === 0 || curTitle.length === 0) return;
 
@@ -61,9 +65,10 @@ class TransactionList extends React.Component<ITransactionList, ITransactionList
         let list = this.state.items.map((item) => {
             return (
                 <div className="field-item">
-                    {item.name}: ${item.amount} ({item.frequency})
+                    {item.name}: ${item.toFreq(this.state.targetFreq)} ({this.state.targetFreq})
                 </div>
             );
+            // 5/wk * wk/7day
         });
         return (
             <div className="add-income">
@@ -127,14 +132,10 @@ class Transaction {
         }
     }
 
-    toFreq(newFreq: Frequency): number | undefined {
-        let freqToDay = this.toDays(newFreq);
-
-        if (freqToDay) return this.amount / freqToDay;
-        else return undefined;
+    toFreq(newFreq: Frequency): number | undefined | null {
+        const curFreqDays = this.toDays(this.frequency);
+        const newFreqDays = this.toDays(newFreq);
+        return curFreqDays && newFreqDays && (newFreqDays * this.amount) / curFreqDays;
     }
-
-    // 5/wk -> ?/day
-    // 5/wk * wk/7day
 }
 export default TransactionList;
